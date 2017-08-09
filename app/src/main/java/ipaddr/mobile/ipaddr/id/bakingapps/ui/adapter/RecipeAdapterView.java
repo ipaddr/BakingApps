@@ -4,6 +4,7 @@ import android.content.Context;
 import ipaddr.mobile.ipaddr.id.bakingapps.R;
 import ipaddr.mobile.ipaddr.id.bakingapps.model.Recipe;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeDetailActivity;
 import ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeDetailFragment;
 import ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeFragment;
 
@@ -66,11 +68,9 @@ public class RecipeAdapterView extends RecyclerView.Adapter<RecipeAdapterView.Re
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RecipeDetailFragment rdf = RecipeDetailFragment.newInstance(new GsonBuilder().create().toJson(recipe), "");
-                FragmentManager fm=((AppCompatActivity) context).getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.fragment_container, rdf, RecipeFragment.class.getSimpleName());
-                ft.commit();
+                Intent intent = new Intent(context, RecipeDetailActivity.class);
+                intent.putExtra(RecipeDetailActivity.RECIPE, new GsonBuilder().create().toJson(recipe));
+                context.startActivity(intent);
             }
         });
     }

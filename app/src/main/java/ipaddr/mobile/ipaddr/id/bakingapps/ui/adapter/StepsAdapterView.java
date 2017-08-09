@@ -13,8 +13,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +25,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipaddr.mobile.ipaddr.id.bakingapps.R;
 import ipaddr.mobile.ipaddr.id.bakingapps.model.Step;
-import ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeStepDetailFragment;
+import ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeStepDescriptionItemFragment;
+import ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeStepDetailActivity;
 
 /**
  * Created by iip on 7/31/17.
@@ -31,7 +35,7 @@ import ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeStepDetailFragment;
 public class StepsAdapterView extends RecyclerView.Adapter<StepsAdapterView.StepsViewHolder> {
 
     private Context context;
-    private List<Step> steps;
+    private List<Step> steps = new ArrayList<>();
 
     public StepsAdapterView(List<Step> steps){
         this.steps = new ArrayList<>();
@@ -64,10 +68,11 @@ public class StepsAdapterView extends RecyclerView.Adapter<StepsAdapterView.Step
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fragment f = RecipeStepDetailFragment.newInstance(step.getVideoURL(), step.getDescription());
-                FragmentTransaction ft = ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, f);
-                ft.commit();
+                Intent intent = new Intent(context, RecipeStepDetailActivity.class);
+                Type type = new TypeToken<List<Step>>(){}.getType();
+                String ssteps = new GsonBuilder().create().toJson(steps, type);
+                intent.putExtra(RecipeStepDetailActivity.STEPS, ssteps);
+                context.startActivity(intent);
             }
         });
     }
