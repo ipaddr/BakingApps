@@ -6,7 +6,9 @@ package ipaddr.mobile.ipaddr.id.bakingapps.util;
 
 public class MockData {
 
-    public static final String DATA = "[\n" +
+    public static String DATA;
+
+    public static final String DATA_1 = "[\n" +
             "  {\n" +
             "    \"id\": 1,\n" +
             "    \"name\": \"Nutella Pie\",\n" +

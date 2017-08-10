@@ -9,7 +9,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecipeRetrofitInstance {
 
-    public static final String URL = "https://d17h27t6h515a5.cloudfront.net/topher/2017/May/59121517_baking/baking.json";
+    public static final String URL = "https://d17h27t6h515a5.cloudfront.net/";
 
     public static Retrofit getInstance(){
         Retrofit retrofit = new Retrofit.Builder()

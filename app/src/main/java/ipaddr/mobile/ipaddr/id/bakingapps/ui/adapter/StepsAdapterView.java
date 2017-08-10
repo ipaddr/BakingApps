@@ -17,6 +17,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.squareup.picasso.Picasso;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import ipaddr.mobile.ipaddr.id.bakingapps.R;
+import ipaddr.mobile.ipaddr.id.bakingapps.model.SelectedPosition;
 import ipaddr.mobile.ipaddr.id.bakingapps.model.Step;
 import ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeStepDescriptionItemFragment;
 import ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeStepDetailActivity;
@@ -36,10 +39,12 @@ public class StepsAdapterView extends RecyclerView.Adapter<StepsAdapterView.Step
 
     private Context context;
     private List<Step> steps = new ArrayList<>();
+    private boolean mTwoPane = false;
 
-    public StepsAdapterView(List<Step> steps){
+    public StepsAdapterView(List<Step> steps, boolean twoPane){
         this.steps = new ArrayList<>();
         this.steps.addAll(steps);
+        mTwoPane = twoPane;
     }
 
     @Override
@@ -51,7 +56,7 @@ public class StepsAdapterView extends RecyclerView.Adapter<StepsAdapterView.Step
     }
 
     @Override
-    public void onBindViewHolder(StepsViewHolder holder, int position) {
+    public void onBindViewHolder(StepsViewHolder holder, final int position) {
         final Step step = steps.get(position);
 
         if (step.getThumbnailURL() != null && !TextUtils.isEmpty(step.getThumbnailURL())){
@@ -68,11 +73,15 @@ public class StepsAdapterView extends RecyclerView.Adapter<StepsAdapterView.Step
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, RecipeStepDetailActivity.class);
-                Type type = new TypeToken<List<Step>>(){}.getType();
-                String ssteps = new GsonBuilder().create().toJson(steps, type);
-                intent.putExtra(RecipeStepDetailActivity.STEPS, ssteps);
-                context.startActivity(intent);
+                if (mTwoPane){
+                    EventBus.getDefault().post(new SelectedPosition(position));
+                } else {
+                    Intent intent = new Intent(context, RecipeStepDetailActivity.class);
+                    Type type = new TypeToken<List<Step>>(){}.getType();
+                    String ssteps = new GsonBuilder().create().toJson(steps, type);
+                    intent.putExtra(RecipeStepDetailActivity.STEPS, ssteps);
+                    context.startActivity(intent);
+                }
             }
         });
     }
