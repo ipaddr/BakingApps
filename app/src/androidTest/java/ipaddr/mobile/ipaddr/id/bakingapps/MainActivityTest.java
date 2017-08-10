@@ -62,11 +62,17 @@ public class MainActivityTest {
     }
 
     @Test
-    public void view(){
+    public void testLaunchRecipeActivity(){
         // Verify that an intent to the dialer was sent with the correct action, phone
         // number and package. Think of Intents intended API as the equivalent to Mockito's verify.
         intending(allOf(
                 hasComponent(hasShortClassName(".RecipeActivity"))));
+    }
+
+    @Test
+    public void testRecipeActivityViews(){
+        onView(withId(R.id.fragment_container)).check(matches(isDisplayed()));
+        onView(withId(R.id.rv)).check(matches(isDisplayed()));
     }
 
     @After
