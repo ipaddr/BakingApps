@@ -9,8 +9,10 @@ import ipaddr.mobile.ipaddr.id.bakingapps.util.MockData;
 import retrofit2.Call;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(new ProgressBar(this));
         initNetwork();
+//        MockData.DATA = MockData.CONTOH_DATA;
+//        startActivity(new Intent(MainActivity.this, RecipeActivity.class));
     }
 
     void initNetwork(){
@@ -65,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     public void onStop() {
         super.onStop();
         EventBus.getDefault().unregister(this);
+        PreferenceManager.getDefaultSharedPreferences(this).getString("ID", "");
     }
 
     /**

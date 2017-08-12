@@ -32,12 +32,16 @@ public class NetworkTask extends AsyncTask<Void, Void, Void> implements IdlingRe
     @Override
     protected Void doInBackground(Void... params) {
         try {
-            IRecipeAccessNetwork instance =
-                    RecipeRetrofitInstance.getInstance().create(IRecipeAccessNetwork.class);
+            IRecipeAccessNetwork instance = RecipeRetrofitInstance.getInstance().create(IRecipeAccessNetwork.class);
+
             Call<List<Recipe>> recipeCall = instance.getAllRecips();
+
             List<Recipe> recipes = recipeCall.execute().body();
+
             Type type = new TypeToken<List<Recipe>>(){}.getType();
+
             MockData.DATA = new GsonBuilder().create().toJson(recipes, type);
+
             EventBus.getDefault().post(MockData.DATA);
         } catch (IOException e) {
             e.printStackTrace();

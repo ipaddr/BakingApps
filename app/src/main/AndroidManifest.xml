@@ -23,6 +23,12 @@
         <activity android:name=".ui.RecipeDetailActivity" android:parentActivityName=".ui.RecipeActivity"/>
         <activity android:name=".ui.RecipeStepDetailActivity" android:parentActivityName=".ui.RecipeDetailActivity"/>
 
+        <activity android:name=".widget.BakingAppWidgetConfigurationActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
+        
         <receiver android:name=".widget.BakingAppWidgetProvider" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

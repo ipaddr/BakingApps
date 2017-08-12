@@ -41,10 +41,17 @@ public class StepsAdapterView extends RecyclerView.Adapter<StepsAdapterView.Step
     private List<Step> steps = new ArrayList<>();
     private boolean mTwoPane = false;
 
-    public StepsAdapterView(List<Step> steps, boolean twoPane){
+    public interface OnStepAdapterViewListener{
+        void onStepAdapterViewSelected(int position);
+    }
+
+    private OnStepAdapterViewListener onStepAdapterViewListener;
+
+    public StepsAdapterView(List<Step> steps, boolean twoPane, OnStepAdapterViewListener onStepAdapterViewListener){
         this.steps = new ArrayList<>();
         this.steps.addAll(steps);
         mTwoPane = twoPane;
+        this.onStepAdapterViewListener = onStepAdapterViewListener;
     }
 
     @Override
@@ -73,6 +80,7 @@ public class StepsAdapterView extends RecyclerView.Adapter<StepsAdapterView.Step
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                onStepAdapterViewListener.onStepAdapterViewSelected(position);
                 if (mTwoPane){
                     EventBus.getDefault().post(new SelectedPosition(position));
                 } else {

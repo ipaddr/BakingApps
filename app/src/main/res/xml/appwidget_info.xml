@@ -7,5 +7,6 @@
     android:previewImage="@mipmap/ic_launcher"
     android:initialLayout="@layout/fragment_recipe_detail"
     android:resizeMode="horizontal|vertical"
+    android:configure="ipaddr.mobile.ipaddr.id.bakingapps.widget.BakingAppWidgetConfigurationActivity"
     android:widgetCategory="home_screen">
 </appwidget-provider>

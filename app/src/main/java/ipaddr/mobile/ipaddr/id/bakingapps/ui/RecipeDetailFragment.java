@@ -11,11 +11,16 @@ import android.view.ViewGroup;
 
 import com.google.gson.GsonBuilder;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import ipaddr.mobile.ipaddr.id.bakingapps.R;
 import ipaddr.mobile.ipaddr.id.bakingapps.model.Ingredient;
 import ipaddr.mobile.ipaddr.id.bakingapps.model.Recipe;
+import ipaddr.mobile.ipaddr.id.bakingapps.model.SelectedPosition;
 import ipaddr.mobile.ipaddr.id.bakingapps.model.Step;
 import ipaddr.mobile.ipaddr.id.bakingapps.ui.adapter.IngredientsAdapterView;
 import ipaddr.mobile.ipaddr.id.bakingapps.ui.adapter.StepsAdapterView;
@@ -28,7 +33,7 @@ import ipaddr.mobile.ipaddr.id.bakingapps.ui.adapter.StepsAdapterView;
  * Use the {@link RecipeDetailFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RecipeDetailFragment extends Fragment {
+public class RecipeDetailFragment extends Fragment implements StepsAdapterView.OnStepAdapterViewListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public  static final String STRING_RECIPE = "ipaddr.mobile.ipaddr.id.bakingapps.ui.RecipeDetailFragment.STRING_RECIPE";
@@ -37,6 +42,9 @@ public class RecipeDetailFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String sRecipe;
     private boolean mTwoPane;
+
+    private static final String STEPS_POSITION = "STEPS_POSITION";
+    private int stepsPosition = -1;
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,6 +70,17 @@ public class RecipeDetailFragment extends Fragment {
     }
 
     @Override
+    public void onStepAdapterViewSelected(int position) {
+        stepsPosition = position;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STEPS_POSITION, stepsPosition);
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey(STRING_RECIPE) && getArguments().containsKey(TWO_PANE)) {
@@ -73,6 +92,9 @@ public class RecipeDetailFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (savedInstanceState != null){
+            stepsPosition = savedInstanceState.getInt(STEPS_POSITION);
+        }
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(ipaddr.mobile.ipaddr.id.bakingapps.R.layout.fragment_recipe_detail, container, false);
 
@@ -86,9 +108,12 @@ public class RecipeDetailFragment extends Fragment {
 
         List<Step> steps = recipe.getSteps();
         RecyclerView rvSteps = (RecyclerView) rootView.findViewById(R.id.rv_steps);
-        StepsAdapterView stepsAdapterView = new StepsAdapterView(steps, mTwoPane);
+        StepsAdapterView stepsAdapterView = new StepsAdapterView(steps, mTwoPane, this);
         rvSteps.setAdapter(stepsAdapterView);
         rvSteps.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        if (stepsPosition != -1)
+            rvSteps.smoothScrollToPosition(stepsPosition);
 
         return rootView;
     }

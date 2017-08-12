@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,8 +55,9 @@ public class RecipeAdapterView extends RecyclerView.Adapter<RecipeAdapterView.Re
     public void onBindViewHolder(RecipeViewHolder holder, int position) {
         final Recipe recipe = recipes.get(position);
 
+        if (recipe.getImage() != null && !TextUtils.isEmpty(recipe.getImage()))
         Picasso.with(context)
-                .load(recipe.getName())
+                .load(recipe.getImage())
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher)
                 .into(holder.image);

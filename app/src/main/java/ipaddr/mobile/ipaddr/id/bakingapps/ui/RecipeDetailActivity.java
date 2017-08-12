@@ -63,30 +63,34 @@ public class RecipeDetailActivity extends AppCompatActivity
 
         if (findViewById(R.id.view_pager) != null){
             mTwoPane = true;
-            initMasterDetail(sRecipe, recipe);
+            initMasterDetail(savedInstanceState, sRecipe, recipe);
         } else {
             mTwoPane = false;
-            init(sRecipe);
+            init(savedInstanceState, sRecipe);
         }
     }
 
-    private void init(String recipe){
-        RecipeDetailFragment rdf = RecipeDetailFragment.newInstance(recipe, mTwoPane);
-        FragmentManager fm=getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.fragment_container, rdf, RecipeFragment.class.getSimpleName());
-        ft.commit();
+    private void init(Bundle savedInstanceState, String recipe){
+        if (savedInstanceState == null){
+            RecipeDetailFragment rdf = RecipeDetailFragment.newInstance(recipe, mTwoPane);
+            FragmentManager fm=getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.fragment_container, rdf, RecipeFragment.class.getSimpleName());
+            ft.commit();
+        }
     }
 
-    private void initMasterDetail(String SRecipe, Recipe recipe){
-        init(sRecipe);
-        initViewPager(recipe.getSteps());
+    private void initMasterDetail(Bundle savedInstanceState, String SRecipe, Recipe recipe){
+        init(savedInstanceState, sRecipe);
+        initViewPager(savedInstanceState, recipe.getSteps());
     }
 
-    private void initViewPager(List<Step> steps){
-        viewPager = (ViewPager)findViewById(R.id.view_pager);
-        adapter = new RecipeStepDetailPagerAdapter(getSupportFragmentManager(), this, steps);
-        viewPager.setAdapter(adapter);
+    private void initViewPager(Bundle savedInstanceState, List<Step> steps){
+        if (savedInstanceState == null){
+            viewPager = (ViewPager)findViewById(R.id.view_pager);
+            adapter = new RecipeStepDetailPagerAdapter(getSupportFragmentManager(), this, steps);
+            viewPager.setAdapter(adapter);
+        }
     }
 
     @Override
