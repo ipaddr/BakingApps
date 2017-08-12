@@ -36,8 +36,13 @@ public class RecipeStepDescriptionItemFragment extends Fragment {
     private TextView tvDescirption;
     private SimpleExoPlayer player;
 
+    private static final String PLAYWHENREADY = "PLAYWHENREADY";
     private boolean playWhenReady= true;
+
+    private static final String CURRENTWINDOW = "CURRENTWINDOW";
     private int currentWindow;
+
+    private static final String PLAYBACKPOSITION = "PLAYBACKPOSITION";
     private long playBackPosition;
 
     private List<Step> steps;
@@ -59,6 +64,14 @@ public class RecipeStepDescriptionItemFragment extends Fragment {
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(PLAYWHENREADY, playWhenReady);
+        outState.putInt(CURRENTWINDOW, currentWindow);
+        outState.putLong(PLAYBACKPOSITION, playBackPosition);
+    }
+
+    @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null && getArguments().containsKey(VIDEO_URL) && getArguments().containsKey(DESCRIPTION)){
@@ -71,6 +84,13 @@ public class RecipeStepDescriptionItemFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        if (savedInstanceState != null){
+            playWhenReady = savedInstanceState.getBoolean(PLAYWHENREADY);
+            currentWindow = savedInstanceState.getInt(CURRENTWINDOW);
+            playBackPosition = savedInstanceState.getLong(PLAYBACKPOSITION);
+        }
+
         View rootView = inflater.inflate(R.layout.fragment_recipe_step_detail, container,false);
         mPlayerView = (SimpleExoPlayerView)rootView.findViewById(R.id.recipe_step_detail_video);
         tvDescirption = (TextView)rootView.findViewById(R.id.recipe_step_detail_text);
