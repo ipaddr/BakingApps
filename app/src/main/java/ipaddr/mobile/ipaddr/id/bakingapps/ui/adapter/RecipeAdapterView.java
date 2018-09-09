@@ -39,7 +39,8 @@ public class RecipeAdapterView extends RecyclerView.Adapter<RecipeAdapterView.Re
 
     public RecipeAdapterView(List<Recipe> recipes){
         this.recipes = new ArrayList<>();
-        this.recipes.addAll(recipes);
+        if (recipes != null && recipes.size() > 0)
+            this.recipes.addAll(recipes);
     }
 
     @Override

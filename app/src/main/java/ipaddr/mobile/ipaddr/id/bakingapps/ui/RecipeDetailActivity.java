@@ -5,8 +5,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -41,6 +44,17 @@ public class RecipeDetailActivity extends AppCompatActivity
     private RecipeStepDetailPagerAdapter adapter;
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
@@ -53,9 +67,26 @@ public class RecipeDetailActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(RECIPE, new GsonBuilder().create().toJson(recipe));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recipe_detail);
+
+        if (savedInstanceState != null){
+            sRecipe = savedInstanceState.getString(RECIPE);
+            recipe = new GsonBuilder().create().fromJson(sRecipe, Recipe.class);
+        }
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         if (getIntent() != null && getIntent().hasExtra(RECIPE)){
             sRecipe = getIntent().getStringExtra(RECIPE);
             recipe = new GsonBuilder().create().fromJson(sRecipe, Recipe.class);
@@ -71,9 +102,9 @@ public class RecipeDetailActivity extends AppCompatActivity
     }
 
     private void init(Bundle savedInstanceState, String recipe){
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             RecipeDetailFragment rdf = RecipeDetailFragment.newInstance(recipe, mTwoPane);
-            FragmentManager fm=getSupportFragmentManager();
+            FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.fragment_container, rdf, RecipeFragment.class.getSimpleName());
             ft.commit();
