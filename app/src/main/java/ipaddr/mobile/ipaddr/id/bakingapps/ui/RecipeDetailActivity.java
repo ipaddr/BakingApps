@@ -117,11 +117,11 @@ public class RecipeDetailActivity extends AppCompatActivity
     }
 
     private void initViewPager(Bundle savedInstanceState, List<Step> steps){
-        if (savedInstanceState == null){
+//        if (savedInstanceState == null){
             viewPager = (ViewPager)findViewById(R.id.view_pager);
             adapter = new RecipeStepDetailPagerAdapter(getSupportFragmentManager(), this, steps);
             viewPager.setAdapter(adapter);
-        }
+//        }
     }
 
     @Override
